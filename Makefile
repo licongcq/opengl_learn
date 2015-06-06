@@ -1,6 +1,6 @@
 # OBJS specifies which files to compile as part of the project
 OBJS = main.cpp
- 
+
 # CC specifies which compiler we're using
 CC = g++
  
@@ -12,11 +12,11 @@ LIBRARY_PATHS = -L/usr/local/lib -I/opt/X11/lib
  
 # COMPILER_FLAGS specifies the additional compilation options we're using
 # -w suppresses all warnings
-COMPILER_FLAGS = -w
+COMPILER_FLAGS = 
  
 # LINKER_FLAGS specifies the libraries we're linking against
 # Cocoa, IOKit, and CoreVideo are needed for static GLFW3.
-LINKER_FLAGS = -framework OpenGL -lglfw3 -lglew
+LINKER_FLAGS = -framework CoreFoundation -framework OpenGL -lSOIL -lglfw3 -lglew -lSOIL
  
 # OBJ_NAME specifies the name of our exectuable
 OBJ_NAME = main

@@ -1,8 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
+#include "SOIL.h"
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+
  
 // Define some of the global variables we're using for this sample
 GLuint program;
@@ -71,10 +73,10 @@ int main() {
   glBindVertexArray(vao);
 
 float vertices[] = {
-    -0.5f,  0.5f, 1.0f, 0.0f, 0.0f, // Top-left
-     0.5f,  0.5f, 0.0f, 1.0f, 0.0f, // Top-right
-     0.5f, -0.5f, 0.0f, 0.0f, 1.0f, // Bottom-right
-    -0.5f, -0.5f, 1.0f, 1.0f, 1.0f  // Bottom-left
+    -0.5f,  0.5f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,// Top-left
+     0.5f,  0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,// Top-right
+     0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,// Bottom-right
+    -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f// Bottom-left
 };
   GLuint vbo;
   glGenBuffers(1, &vbo);
@@ -90,6 +92,13 @@ float vertices[] = {
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elements), elements, GL_STATIC_DRAW);
 
+  // Import texture
+  int width, height;
+  unsigned char* image = SOIL_load_image("img.png", &width, &height, 0, SOIL_LOAD_RGB);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB,
+              GL_UNSIGNED_BYTE, image);
+  SOIL_free_image_data(image);
+  printf("%d, %d\n", width, height);
 
   // Shaders is the next part of our program. Notice that we use version 410 core. This has to match our version of OpenGL we are using, which is the core profile in version 4.1, thus 410 core.
  
@@ -101,11 +110,14 @@ float vertices[] = {
       "                                                                  \n"
       "in vec2 position;                                                 \n"
       "in vec3 color;                                                    \n"
+      "in vec2 texturePos;                                               \n"
       "out vec3 Color;                                                   \n"
+      "out vec2 TexturePos;                                              \n"
       "                                                                  \n"
       "void main(void)                                                   \n"
       "{                                                                 \n"
       "    Color = color;                                                \n"
+      "    TexturePos = texturePos;                                      \n"
       "    gl_Position = vec4(position.x, position.y, 1.0, 1.0);         \n"
       "}                                                                 \n"
   };
@@ -159,13 +171,16 @@ float vertices[] = {
  
   // Making the link between vertex data and attributes
   GLint posAttrib = glGetAttribLocation(program, "position");
-  glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 5*sizeof(float), 0);
+  glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 7*sizeof(float), 0);
   glEnableVertexAttribArray(posAttrib);
 
   GLint colAttrib = glGetAttribLocation(program, "color");
-  glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 5*sizeof(float), (void*)(2*sizeof(float)));
+  glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 7*sizeof(float), (void*)(2*sizeof(float)));
   glEnableVertexAttribArray(colAttrib);
 
+  GLint texAttrib = glGetAttribLocation(program, "texturePos");
+  glVertexAttribPointer(texAttrib, 2, GL_FLOAT, GL_FALSE, 7*sizeof(float), (void*)(5*sizeof(float)));
+  glEnableVertexAttribArray(texAttrib);
 
   // We'll specify that we want to use this program that we've attached the shaders to.
   glUseProgram(program);
