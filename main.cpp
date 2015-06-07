@@ -36,7 +36,7 @@ int main() {
   glfwSetErrorCallback(error_callback);
  
   // Set up OpenGL options.
-  // Use OpenGL verion 4.1,
+  // Use OpenGL verion 4.3,
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
   // GLFW_OPENGL_FORWARD_COMPAT specifies whether the OpenGL context should be forward-compatible, i.e. one where all functionality deprecated in the requested version of OpenGL is removed.
@@ -92,14 +92,6 @@ float vertices[] = {
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elements), elements, GL_STATIC_DRAW);
 
-  // Import texture
-  int width, height;
-  unsigned char* image = SOIL_load_image("img.png", &width, &height, 0, SOIL_LOAD_RGB);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB,
-              GL_UNSIGNED_BYTE, image);
-  SOIL_free_image_data(image);
-  printf("%d, %d\n", width, height);
-
   // Shaders is the next part of our program. Notice that we use version 410 core. This has to match our version of OpenGL we are using, which is the core profile in version 4.1, thus 410 core.
  
   // Vertex shader source code. This draws the vertices in our window. We have 3 vertices since we're drawing an triangle.
@@ -127,12 +119,17 @@ float vertices[] = {
   {
       "#version 410 core                                                 \n"
       "                                                                  \n"
+      "uniform sampler2D tex1;                                           \n"
+      "uniform sampler2D tex2;                                                 \n"
       "in vec3 Color;                                                    \n"
+      "in vec2 TexturePos;                                               \n"
       "out vec4 color;                                                   \n"
       "                                                                  \n"
       "void main(void)                                                   \n"
       "{                                                                 \n"
-      "    color = vec4(Color, 1.0);                                     \n"
+      "    vec4 col1 = texture(tex1, TexturePos);                        \n"
+      "    vec4 col2 = texture(tex2, TexturePos);                        \n"
+      "    color = mix(col1, col2, 0.5);                          \n"
       "}                                                                 \n"
   };
  
@@ -184,7 +181,48 @@ float vertices[] = {
 
   // We'll specify that we want to use this program that we've attached the shaders to.
   glUseProgram(program);
-     
+  // MUST use program before setting uniforms!@@
+
+  // Import texture
+  GLuint tex[2];
+  glGenTextures(2, tex);
+
+  int width, height;
+  unsigned char* image;
+  GLint location;
+
+  glActiveTexture(GL_TEXTURE0);
+  glBindTexture(GL_TEXTURE_2D, tex[0]);
+  image = SOIL_load_image("img.png", &width, &height, 0, SOIL_LOAD_RGB);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB,
+              GL_UNSIGNED_BYTE, image);
+  SOIL_free_image_data(image);
+  location = glGetUniformLocation(program, "tex1");
+  glUniform1i(location, 0);
+
+  // These parameters MUST be set for each texture, or you will end up with a black screen
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+
+  glActiveTexture(GL_TEXTURE1);
+  glBindTexture(GL_TEXTURE_2D, tex[1]);
+  image = SOIL_load_image("img.jpg", &width, &height, 0, SOIL_LOAD_RGB);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB,
+              GL_UNSIGNED_BYTE, image);
+  SOIL_free_image_data(image);
+  location = glGetUniformLocation(program, "tex2");
+  glUniform1i(location, 1);
+
+
+  // These parameters MUST be set for each texture, or you will end up with a black screen
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
   // This is our render loop. As long as our window remains open (ESC is not pressed), we'll continue to render things.
   while(!glfwWindowShouldClose(window))
   {
