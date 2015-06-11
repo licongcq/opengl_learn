@@ -1,10 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
-#include "SOIL.h"
+#include <SOIL.h>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <chrono>
  
 // Define some of the global variables we're using for this sample
 GLuint program;
@@ -106,11 +109,14 @@ float vertices[] = {
       "out vec3 Color;                                                   \n"
       "out vec2 TexturePos;                                              \n"
       "                                                                  \n"
+      "uniform mat4 model;                                               \n"
+      "uniform mat4 view;                                                \n"
+      "uniform mat4 proj;                                                \n"
       "void main(void)                                                   \n"
       "{                                                                 \n"
       "    Color = color;                                                \n"
       "    TexturePos = texturePos;                                      \n"
-      "    gl_Position = vec4(position.x, position.y, 1.0, 1.0);         \n"
+      "    gl_Position = proj * view * model * vec4(position.x, position.y, 0.0, 1.0); \n"
       "}                                                                 \n"
   };
  
@@ -120,7 +126,7 @@ float vertices[] = {
       "#version 410 core                                                 \n"
       "                                                                  \n"
       "uniform sampler2D tex1;                                           \n"
-      "uniform sampler2D tex2;                                                 \n"
+      "uniform sampler2D tex2;                                           \n"
       "in vec3 Color;                                                    \n"
       "in vec2 TexturePos;                                               \n"
       "out vec4 color;                                                   \n"
@@ -129,7 +135,7 @@ float vertices[] = {
       "{                                                                 \n"
       "    vec4 col1 = texture(tex1, TexturePos);                        \n"
       "    vec4 col2 = texture(tex2, TexturePos);                        \n"
-      "    color = mix(col1, col2, 0.5);                          \n"
+      "    color = mix(col1, col2, 0.5);                                 \n"
       "}                                                                 \n"
   };
  
@@ -223,6 +229,21 @@ float vertices[] = {
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
+
+  glm::mat4 view = glm::lookAt(
+      glm::vec3(1.2f, 1.2f, 1.2f),
+      glm::vec3(0.0f, 0.0f, 0.0f),
+      glm::vec3(0.0f, 0.0f, 1.0f)
+  );
+  GLint uniView = glGetUniformLocation(program, "view");
+  glUniformMatrix4fv(uniView, 1, GL_FALSE, glm::value_ptr(view));
+
+  glm::mat4 proj = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 10.0f);
+  GLint uniProj = glGetUniformLocation(program, "proj");
+  glUniformMatrix4fv(uniProj, 1, GL_FALSE, glm::value_ptr(proj));
+
+  auto t_start = std::chrono::high_resolution_clock::now();
+
   // This is our render loop. As long as our window remains open (ESC is not pressed), we'll continue to render things.
   while(!glfwWindowShouldClose(window))
   {
@@ -230,6 +251,19 @@ float vertices[] = {
     static const GLfloat black[] = { 0.0f, 0.0f, 0.0f, 0.0f };
     // Clear the entire buffer with our black color (sets the background to be black).
     glClearBufferfv(GL_COLOR, 0, black);
+
+    auto t_now = std::chrono::high_resolution_clock::now();
+    float time = std::chrono::duration_cast<std::chrono::duration<float> >(t_now - t_start).count();
+
+    glm::mat4 trans;
+    trans = glm::rotate(
+        trans,
+        time * glm::radians(180.0f),
+        glm::vec3(0.0f, 0.0f, 1.0f)
+    );
+    GLint uniTrans = glGetUniformLocation(program, "model");
+    glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(trans));
+
     // Draw our triangles
     // glDrawArrays(GL_TRIANGLES, 0, 3);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
