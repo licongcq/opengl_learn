@@ -75,12 +75,58 @@ int main() {
   glGenVertexArrays(1, &vao);
   glBindVertexArray(vao);
 
-float vertices[] = {
-    -0.5f,  0.5f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,// Top-left
-     0.5f,  0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,// Top-right
-     0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,// Bottom-right
-    -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f// Bottom-left
-};
+  GLfloat vertices[] = {
+      -0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
+       0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
+       0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+       0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+      -0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f,
+      -0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
+
+      -0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
+       0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
+       0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+       0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+      -0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f,
+      -0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
+
+      -0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
+      -0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+      -0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f,
+      -0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f,
+      -0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
+      -0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
+
+       0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
+       0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+       0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f,
+       0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f,
+       0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
+       0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
+
+      -0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f,
+       0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+       0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
+       0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
+      -0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
+      -0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f,
+
+      -0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f,
+       0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+       0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
+       0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
+      -0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
+      -0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f,
+
+
+      -1.0f, -1.0f, -0.5f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+       1.0f, -1.0f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+       1.0f,  1.0f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f,
+       1.0f,  1.0f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f,
+      -1.0f,  1.0f, -0.5f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f,
+      -1.0f, -1.0f, -0.5f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f
+  };
+
   GLuint vbo;
   glGenBuffers(1, &vbo);
   glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -103,7 +149,7 @@ float vertices[] = {
   {
       "#version 410 core                                                 \n"
       "                                                                  \n"
-      "in vec2 position;                                                 \n"
+      "in vec3 position;                                                 \n"
       "in vec3 color;                                                    \n"
       "in vec2 texturePos;                                               \n"
       "out vec3 Color;                                                   \n"
@@ -116,7 +162,7 @@ float vertices[] = {
       "{                                                                 \n"
       "    Color = color;                                                \n"
       "    TexturePos = texturePos;                                      \n"
-      "    gl_Position = proj * view * model * vec4(position.x, position.y, 0.0, 1.0); \n"
+      "    gl_Position = proj * view * model * vec4(position, 1.0); \n"
       "}                                                                 \n"
   };
  
@@ -127,6 +173,7 @@ float vertices[] = {
       "                                                                  \n"
       "uniform sampler2D tex1;                                           \n"
       "uniform sampler2D tex2;                                           \n"
+      "uniform vec3 overrideColor;                                           \n"
       "in vec3 Color;                                                    \n"
       "in vec2 TexturePos;                                               \n"
       "out vec4 color;                                                   \n"
@@ -135,7 +182,7 @@ float vertices[] = {
       "{                                                                 \n"
       "    vec4 col1 = texture(tex1, TexturePos);                        \n"
       "    vec4 col2 = texture(tex2, TexturePos);                        \n"
-      "    color = mix(col1, col2, 0.5);                                 \n"
+      "    color = vec4(overrideColor, 1.0) * vec4(Color, 1.0) * mix(col1, col2, 0.5);                                 \n"
       "}                                                                 \n"
   };
  
@@ -174,15 +221,15 @@ float vertices[] = {
  
   // Making the link between vertex data and attributes
   GLint posAttrib = glGetAttribLocation(program, "position");
-  glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 7*sizeof(float), 0);
+  glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, 8*sizeof(float), 0);
   glEnableVertexAttribArray(posAttrib);
 
   GLint colAttrib = glGetAttribLocation(program, "color");
-  glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 7*sizeof(float), (void*)(2*sizeof(float)));
+  glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 8*sizeof(float), (void*)(3*sizeof(float)));
   glEnableVertexAttribArray(colAttrib);
 
   GLint texAttrib = glGetAttribLocation(program, "texturePos");
-  glVertexAttribPointer(texAttrib, 2, GL_FLOAT, GL_FALSE, 7*sizeof(float), (void*)(5*sizeof(float)));
+  glVertexAttribPointer(texAttrib, 2, GL_FLOAT, GL_FALSE, 8*sizeof(float), (void*)(6*sizeof(float)));
   glEnableVertexAttribArray(texAttrib);
 
   // We'll specify that we want to use this program that we've attached the shaders to.
@@ -231,8 +278,8 @@ float vertices[] = {
 
 
   glm::mat4 view = glm::lookAt(
-      glm::vec3(1.2f, 1.2f, 1.2f),
-      glm::vec3(0.0f, 0.0f, 0.0f),
+      glm::vec3(2.2f, 2.2f, 2.2f),
+      glm::vec3(0.0f, 0.0f, -0.5f),
       glm::vec3(0.0f, 0.0f, 1.0f)
   );
   GLint uniView = glGetUniformLocation(program, "view");
@@ -242,18 +289,26 @@ float vertices[] = {
   GLint uniProj = glGetUniformLocation(program, "proj");
   glUniformMatrix4fv(uniProj, 1, GL_FALSE, glm::value_ptr(proj));
 
+  glEnable(GL_DEPTH_TEST);
+
   auto t_start = std::chrono::high_resolution_clock::now();
 
   // This is our render loop. As long as our window remains open (ESC is not pressed), we'll continue to render things.
   while(!glfwWindowShouldClose(window))
   {
-    // Set up our black background color
-    static const GLfloat black[] = { 0.0f, 0.0f, 0.0f, 0.0f };
-    // Clear the entire buffer with our black color (sets the background to be black).
-    glClearBufferfv(GL_COLOR, 0, black);
+    // Set up our white background color
+    static const GLfloat white[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+    // Clear the entire buffer with our white color (sets the background to be white).
+    glClearBufferfv(GL_COLOR, 0, white);
+
+    glClear(GL_DEPTH_BUFFER_BIT);
 
     auto t_now = std::chrono::high_resolution_clock::now();
     float time = std::chrono::duration_cast<std::chrono::duration<float> >(t_now - t_start).count();
+
+    GLint uniReflecColor = glGetUniformLocation(program, "overrideColor");
+    glUniform3f(uniReflecColor, 1.0f, 1.0f, 1.0f);
+
 
     glm::mat4 trans;
     trans = glm::rotate(
@@ -265,13 +320,44 @@ float vertices[] = {
     glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(trans));
 
     // Draw our triangles
-    // glDrawArrays(GL_TRIANGLES, 0, 3);
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+
+    // Draw the floor
+    glEnable(GL_STENCIL_TEST);
+    glStencilFunc(GL_ALWAYS, 1, 0xFF); // Set any stencil to 1
+    glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+    glStencilMask(0xFF); // Write to stencil buffer
+    glDepthMask(GL_FALSE); // Don't write to depth buffer
+    glClear(GL_STENCIL_BUFFER_BIT); // Clear stencil buffer (0 by default)
+
+    glDrawArrays(GL_TRIANGLES, 36, 6);
+
+    glDepthMask(GL_TRUE);
+
+    //Draw reflection
+    trans = glm::scale(
+        glm::translate(trans, glm::vec3(0, 0, -1)),
+        glm::vec3(1, 1, -1)
+    );
+    glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(trans));
+
+    glUniform3f(uniReflecColor, 0.3f, 0.3f, 0.3f);
+
+    glStencilFunc(GL_EQUAL, 1, 0xFF); 
+    glStencilMask(0x00);
+
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+
+    glDisable(GL_STENCIL_TEST);
+
+    // glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     // Swap the buffers so that what we drew will appear on the screen.
     glfwSwapBuffers(window);
     glfwPollEvents();
   }
  
+  glDisable(GL_DEPTH_TEST);
+
   // Program clean up when the window gets closed.
   glDeleteVertexArrays(1, &vao);
   glDeleteProgram(program);
